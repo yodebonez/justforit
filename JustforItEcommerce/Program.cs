@@ -1,3 +1,9 @@
+using JustforItEcommerce.Application.Interface;
+using JustforItEcommerce.Application;
+using System;
+using JustforItEcommerce.Infrastruture;
+using Microsoft.EntityFrameworkCore;
+
 namespace JustforItEcommerce
 {
     public class Program
@@ -6,11 +12,17 @@ namespace JustforItEcommerce
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+			// Add services to the container.
 
             builder.Services.AddControllers();
 
-            var app = builder.Build();
+			builder.Services.AddDbContext<DataContext>(options =>
+					  options.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
+
+			builder.Services.AddScoped<IProductService, ProductService>();
+			builder.Services.AddScoped<ICartService, CartService>();
+
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
 
